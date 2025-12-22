@@ -3,7 +3,7 @@ FROM nginx:1.21-alpine
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy application code (read-only for serving static files)
+# Copy application code from parent directory (read-only for serving static files)
 COPY ../ /var/www/html/
 
 # Set proper permissions

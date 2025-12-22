@@ -33,8 +33,8 @@ services:
 
   nginx:
     build:
-      context: .
-      dockerfile: ./docker/Dockerfile.nginx
+      context: ./docker
+      dockerfile: Dockerfile.nginx
     container_name: ildis_nginx
     restart: unless-stopped
     ports:
@@ -50,8 +50,8 @@ services:
 
   db:
     build:
-      context: .
-      dockerfile: ./docker/Dockerfile.db
+      context: ./docker
+      dockerfile: Dockerfile.db
     container_name: ildis_db
     restart: unless-stopped
     environment:
