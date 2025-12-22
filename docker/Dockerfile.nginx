@@ -1,0 +1,16 @@
+FROM nginx:1.21-alpine
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy application code (read-only for serving static files)
+COPY ../ /var/www/html/
+
+# Set proper permissions
+RUN chown -R nginx:nginx /var/www/html \
+    && chmod -R 755 /var/www/html
+
+# Expose port 80
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

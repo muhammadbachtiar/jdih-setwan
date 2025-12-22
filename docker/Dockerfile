@@ -35,13 +35,22 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Create required directories for volume mounts
+# Copy application code into the image
+COPY ../ /var/www/html/
+
+# Create required directories and set permissions
 RUN mkdir -p /var/www/html/backend/web/uploads \
     && mkdir -p /var/www/html/frontend/web/uploads \
     && mkdir -p /var/www/html/backend/runtime \
     && mkdir -p /var/www/html/frontend/runtime \
     && mkdir -p /var/www/html/console/runtime \
-    && chown -R www-data:www-data /var/www/html
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/backend/runtime \
+    && chmod -R 777 /var/www/html/frontend/runtime \
+    && chmod -R 777 /var/www/html/console/runtime \
+    && chmod -R 777 /var/www/html/backend/web/uploads \
+    && chmod -R 777 /var/www/html/frontend/web/uploads
 
 # Copy in php.ini
 COPY php.ini /usr/local/etc/php/php.ini
