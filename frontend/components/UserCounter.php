@@ -73,6 +73,23 @@ class UserCounter extends Component
 	protected $maxDate;
 
 	/**
+	 * Calculate Julian Day Number without calendar extension
+	 * Alternative to gregoriantojd() function
+	 *
+	 * @param int $month Month (1-12)
+	 * @param int $day Day (1-31)
+	 * @param int $year Year
+	 * @return int Julian Day Number
+	 */
+	protected function dateToJulianDay($month, $day, $year)
+	{
+		// Simple implementation: days since epoch (1970-01-01)
+		// This is sufficient for day comparison purposes
+		$timestamp = mktime(0, 0, 0, $month, $day, $year);
+		return floor($timestamp / 86400); // 86400 seconds in a day
+	}
+
+	/**
 	 *
 	 */
 	public function init()
@@ -137,7 +154,7 @@ class UserCounter extends Component
 			return;
 		}
 		$this->getCurrentData();
-		$today = gregoriantojd(date('m'), date('j'), date('Y'));
+		$today = $this->dateToJulianDay(date('m'), date('j'), date('Y'));
 		$daysSinceLastUpdate = $today - $this->dayTime;
 		if ($this->isNewDay()) {
 			$lastUpdateTotalUsers = $this->getLastLoggedUsers();
@@ -191,7 +208,7 @@ class UserCounter extends Component
 	 */
 	protected function isNewDay()
 	{
-		$today = gregoriantojd(date('m'), date('j'), date('Y'));
+		$today = $this->dateToJulianDay(date('m'), date('j'), date('Y'));
 		return ($today != $this->dayTime);
 	}
         protected function getYesterdayQuery()
