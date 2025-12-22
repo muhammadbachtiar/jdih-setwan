@@ -4,7 +4,7 @@ services:
   php:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile
+      dockerfile: docker/Dockerfile
     container_name: ildis_php
     restart: unless-stopped
     volumes:
@@ -33,8 +33,8 @@ services:
 
   nginx:
     build:
-      context: ./docker
-      dockerfile: Dockerfile.nginx
+      context: .
+      dockerfile: docker/Dockerfile.nginx
     container_name: ildis_nginx
     restart: unless-stopped
     ports:
@@ -50,8 +50,8 @@ services:
 
   db:
     build:
-      context: ./docker
-      dockerfile: Dockerfile.db
+      context: .
+      dockerfile: docker/Dockerfile.db
     container_name: ildis_db
     restart: unless-stopped
     environment:

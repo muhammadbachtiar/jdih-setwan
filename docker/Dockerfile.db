@@ -1,0 +1,14 @@
+FROM mysql:5.7
+
+# Copy MySQL configuration
+COPY docker/mysql.cnf /etc/mysql/conf.d/custom.cnf
+
+# Copy database initialization script
+COPY DATABASE/ildis_v4.sql /docker-entrypoint-initdb.d/01-init.sql
+
+# Set proper permissions
+RUN chmod 644 /etc/mysql/conf.d/custom.cnf \
+    && chmod 644 /docker-entrypoint-initdb.d/01-init.sql
+
+
+CMD ["mysqld"]

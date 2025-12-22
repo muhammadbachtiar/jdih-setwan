@@ -74,7 +74,6 @@ codeception.phar
 # Database
 *.sql
 *.sqlite
-*.db
 !/DATABASE/ildis_v4.sql
 
 # Docker

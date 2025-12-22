@@ -36,7 +36,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copy application code into the image
-COPY ../ /var/www/html/
+COPY . /var/www/html/
 
 # Create required directories and set permissions
 RUN mkdir -p /var/www/html/backend/web/uploads \
@@ -53,13 +53,13 @@ RUN mkdir -p /var/www/html/backend/web/uploads \
     && chmod -R 777 /var/www/html/frontend/web/uploads
 
 # Copy in php.ini
-COPY php.ini /usr/local/etc/php/php.ini
+COPY docker/php.ini /usr/local/etc/php/php.ini
 
 # Copy custom PHP-FPM configuration
-COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Copy entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
