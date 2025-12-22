@@ -32,6 +32,16 @@ RUN pecl install imagick && docker-php-ext-enable imagick || true
 # Install composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Copy in php.ini
+COPY docker/php.ini /usr/local/etc/php/php.ini
+
+# Copy custom PHP-FPM configuration
+COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+# Copy entrypoint script
+COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Set working directory
 WORKDIR /var/www/html
 
@@ -51,16 +61,6 @@ RUN mkdir -p /var/www/html/backend/web/uploads \
     && chmod -R 777 /var/www/html/console/runtime \
     && chmod -R 777 /var/www/html/backend/web/uploads \
     && chmod -R 777 /var/www/html/frontend/web/uploads
-
-# Copy in php.ini
-COPY docker/php.ini /usr/local/etc/php/php.ini
-
-# Copy custom PHP-FPM configuration
-COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Copy entrypoint script
-COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["php-fpm"]
