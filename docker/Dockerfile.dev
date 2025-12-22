@@ -1,0 +1,60 @@
+FROM php:7.4-fpm
+
+# Build arguments
+ARG INSTALL_XDEBUG=false
+
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        git \
+        unzip \
+        libzip-dev \
+        libpng-dev \
+        libjpeg-dev \
+        libfreetype6-dev \
+        libonig-dev \
+        libicu-dev \
+        libxml2-dev \
+        libpng-dev \
+        zip \
+        libmagickwand-dev --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip intl xml
+
+# Install imagick (optional)
+RUN pecl install imagick && docker-php-ext-enable imagick || true
+
+# Install xdebug for development (PHP 7.4 compatible version)
+RUN if [ ${INSTALL_XDEBUG} = true ]; then \
+    pecl install xdebug-3.1.6 \
+    && docker-php-ext-enable xdebug \
+    && echo "xdebug.mode=develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.log=/var/log/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+fi
+
+# Install composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy in php.ini (development version)
+COPY php.dev.ini /usr/local/etc/php/php.ini
+
+# Copy custom PHP-FPM configuration
+COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Create www-data user for development
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["php-fpm"]
