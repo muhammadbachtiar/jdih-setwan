@@ -48,6 +48,11 @@ WORKDIR /var/www/html
 # Copy application code into the image
 COPY . /var/www/html/
 
+# Install composer dependencies (during build, not runtime)
+RUN composer install --no-interaction --prefer-dist --no-dev --optimize-autoloader --no-scripts \
+    && composer clear-cache \
+    && rm -rf /root/.composer/cache  # optional: bersihkan cache
+
 # Create required directories and set permissions
 RUN mkdir -p /var/www/html/backend/web/uploads \
     && mkdir -p /var/www/html/frontend/web/uploads \

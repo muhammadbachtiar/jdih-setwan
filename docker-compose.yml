@@ -12,6 +12,9 @@ services:
       - uploads-data:/var/www/html/backend/web/uploads
       - uploads-data:/var/www/html/frontend/web/uploads
       - assets-data:/var/www/html/assets
+      - runtime-data:/var/www/html/backend/runtime
+      - runtime-data:/var/www/html/frontend/runtime
+      - runtime-data:/var/www/html/console/runtime
     environment:
       - COMPOSER_ALLOW_SUPERUSER=1
       - PHP_MEMORY_LIMIT=512M
@@ -44,7 +47,7 @@ services:
       # Persistent file uploads only (read-only for serving)
       - uploads-data:/var/www/html/backend/web/uploads:ro
       - uploads-data:/var/www/html/frontend/web/uploads:ro
-      - assets-data:/var/www/html/assets
+      - assets-data:/var/www/html/assets:ro
     depends_on:
       - php
     networks:
@@ -74,13 +77,13 @@ services:
       start_period: 30s
 
 volumes:
-  # Persistent database storage
   db-data:
     driver: local
-  # Persistent file uploads
   uploads-data:
     driver: local
-  assets-data:   # <<< Tambah volume baru
+  assets-data:
+    driver: local
+  runtime-data:
     driver: local
 
 networks:

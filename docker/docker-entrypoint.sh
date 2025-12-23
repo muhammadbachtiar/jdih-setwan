@@ -12,18 +12,13 @@ if [ -z "$COOKIE_VALIDATION_KEY_BE" ]; then
   echo "Generated Backend Cookie Validation Key"
 fi
 
-# Ensure composer dependencies are installed
-if [ ! -d "vendor" ] && [ -f composer.json ]; then
-  echo "Installing composer dependencies..."
-  composer install --no-interaction --prefer-dist --optimize-autoloader
-fi
-
 # Create required directories
 mkdir -p /var/www/html/backend/web/uploads
 mkdir -p /var/www/html/frontend/web/uploads
 mkdir -p /var/www/html/backend/runtime
 mkdir -p /var/www/html/frontend/runtime
 mkdir -p /var/www/html/console/runtime
+mkdir -p /var/www/html/assets
 
 # Fix permissions for runtime and web assets
 chown -R www-data:www-data /var/www/html/backend/web/uploads || true
@@ -31,6 +26,7 @@ chown -R www-data:www-data /var/www/html/frontend/web/uploads || true
 chown -R www-data:www-data /var/www/html/backend/runtime || true
 chown -R www-data:www-data /var/www/html/frontend/runtime || true
 chown -R www-data:www-data /var/www/html/console/runtime || true
+chown -R www-data:www-data /var/www/html/assets || true
 
 # Set proper permissions
 chmod -R 775 /var/www/html/backend/web/uploads || true
@@ -38,6 +34,7 @@ chmod -R 775 /var/www/html/frontend/web/uploads || true
 chmod -R 775 /var/www/html/backend/runtime || true
 chmod -R 775 /var/www/html/frontend/runtime || true
 chmod -R 775 /var/www/html/console/runtime || true
+chmod -R 775 /var/www/html/assets || true
 
 # Create required log directories
 mkdir -p /var/log
