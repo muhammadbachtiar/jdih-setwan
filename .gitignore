@@ -26,7 +26,6 @@ Thumbs.db
 !/vendor/bower
 !/vendor/mdmsoft/yii2-admin
 composer.phar
-composer.lock
 
 # Testing
 phpunit.phar
