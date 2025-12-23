@@ -20,13 +20,6 @@ Thumbs.db
 *.swo
 *~
 
-# Composer
-/vendor/*
-!/vendor/adminlte
-!/vendor/bower
-!/vendor/mdmsoft/yii2-admin
-composer.phar
-
 # Testing
 phpunit.phar
 /phpunit.xml
