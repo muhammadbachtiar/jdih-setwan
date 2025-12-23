@@ -11,6 +11,7 @@ services:
       # Persistent file uploads only
       - uploads-data:/var/www/html/backend/web/uploads
       - uploads-data:/var/www/html/frontend/web/uploads
+      - assets-data:/var/www/html/assets
     environment:
       - COMPOSER_ALLOW_SUPERUSER=1
       - PHP_MEMORY_LIMIT=512M
@@ -43,6 +44,7 @@ services:
       # Persistent file uploads only (read-only for serving)
       - uploads-data:/var/www/html/backend/web/uploads:ro
       - uploads-data:/var/www/html/frontend/web/uploads:ro
+      - assets-data:/var/www/html/assets
     depends_on:
       - php
     networks:
@@ -77,6 +79,8 @@ volumes:
     driver: local
   # Persistent file uploads
   uploads-data:
+    driver: local
+  assets-data:   # <<< Tambah volume baru
     driver: local
 
 networks:
