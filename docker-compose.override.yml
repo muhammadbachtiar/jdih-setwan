@@ -1,0 +1,51 @@
+version: '3.8'
+
+# Development overrides for docker-compose.yml
+# This file adds development-specific settings like xdebug, file watchers, etc.
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.override.yml up
+
+services:
+  php:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.dev
+      args:
+        - INSTALL_XDEBUG=true
+    volumes:
+      - ./:/var/www/html:cached
+      # Make composer cache persistent
+      - composer-cache:/home/www-data/.composer/cache
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - PHP_IDE_CONFIG=serverName=ildis-docker
+      - XDEBUG_MODE=develop,debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003 start_with_request=yes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - app-network
+
+  nginx:
+    volumes:
+      - ./:/var/www/html:cached
+      - ./docker/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+
+  db:
+    ports:
+      - "3306:3306"  # Expose MySQL port for external access
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ildis_v4
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
+    volumes:
+      - db-data:/var/lib/mysql
+      # Auto-import SQL dump if present
+      - ./DATABASE/ildis_v4.sql:/docker-entrypoint-initdb.d/ildis_v4.sql:ro
+
+volumes:
+  composer-cache:
+
+networks:
+  app-network:
+    driver: bridge
