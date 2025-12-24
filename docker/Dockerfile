@@ -49,9 +49,11 @@ WORKDIR /var/www/html
 COPY . /var/www/html/
 
 # Install composer dependencies (during build, not runtime)
-RUN composer install --no-interaction --prefer-dist --no-dev --optimize-autoloader --no-scripts \
+RUN composer config -g repo.packagist composer https://packagist.phpindonesia.id \
+    && composer config -g process-timeout 10000 \
+    && composer install --no-interaction --prefer-dist --no-dev --optimize-autoloader --no-scripts \
     && composer clear-cache \
-    && rm -rf /root/.composer/cache  # optional: bersihkan cache
+    && rm -rf /root/.composer/cache
 
 # Create required directories and set permissions
 RUN mkdir -p /var/www/html/assets \
