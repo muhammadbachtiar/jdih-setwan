@@ -51,9 +51,15 @@ WORKDIR /var/www/html
 COPY . /var/www/html/
 
 # Gunakan mirror Aliyun (China) - sangat stabil untuk Indonesia
+# Setup mirror Aliyun + timeout panjang
 RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
     && composer config -g process-timeout 1800 \
-    && composer install --no-interaction --prefer-source --no-dev --optimize-autoloader --no-scripts \
+    && if [ ! -d "vendor" ]; then \
+         echo "Folder vendor tidak ada, menjalankan composer install..." \
+         && composer install --no-interaction --prefer-source --no-dev --optimize-autoloader --no-scripts; \
+       else \
+         echo "Folder vendor sudah ada, skip composer install"; \
+       fi \
     && composer clear-cache \
     && rm -rf /root/.composer/cache
 
