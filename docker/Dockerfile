@@ -54,18 +54,19 @@ RUN composer install --no-interaction --prefer-dist --no-dev --optimize-autoload
     && rm -rf /root/.composer/cache  # optional: bersihkan cache
 
 # Create required directories and set permissions
-RUN mkdir -p /var/www/html/backend/web/uploads \
-    && mkdir -p /var/www/html/frontend/web/uploads \
-    && mkdir -p /var/www/html/backend/runtime \
-    && mkdir -p /var/www/html/frontend/runtime \
-    && mkdir -p /var/www/html/console/runtime \
-    && chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod -R 777 /var/www/html/backend/runtime \
-    && chmod -R 777 /var/www/html/frontend/runtime \
-    && chmod -R 777 /var/www/html/console/runtime \
-    && chmod -R 777 /var/www/html/backend/web/uploads \
-    && chmod -R 777 /var/www/html/frontend/web/uploads
+RUN mkdir -p /var/www/html/assets \
+    && chown -R www-data:www-data /var/www/html/assets \
+    && chown -R www-data:www-data /var/www/html/backend/runtime \
+    && chown -R www-data:www-data /var/www/html/frontend/runtime \
+    && chown -R www-data:www-data /var/www/html/console/runtime \
+    && chown -R www-data:www-data /var/www/html/backend/web/uploads \
+    && chown -R www-data:www-data /var/www/html/frontend/web/uploads \
+    && chmod -R 775 /var/www/html/assets \
+    && chmod -R 775 /var/www/html/backend/runtime \
+    && chmod -R 775 /var/www/html/frontend/runtime \
+    && chmod -R 775 /var/www/html/console/runtime \
+    && chmod -R 775 /var/www/html/backend/web/uploads \
+    && chmod -R 775 /var/www/html/frontend/web/uploads
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["php-fpm"]
