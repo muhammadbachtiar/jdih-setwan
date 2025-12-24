@@ -1,5 +1,7 @@
 FROM php:7.4-fpm
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -48,10 +50,9 @@ WORKDIR /var/www/html
 # Copy application code into the image
 COPY . /var/www/html/
 
-# Install composer dependencies (during build, not runtime)
-RUN composer config -g repo.packagist composer https://packagist.phpindonesia.id \
-    && composer config -g process-timeout 1800 \ 
-    && composer config -g github-protocols https \ 
+# Gunakan mirror Aliyun (China) - sangat stabil untuk Indonesia
+RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
+    && composer config -g process-timeout 1800 \
     && composer install --no-interaction --prefer-source --no-dev --optimize-autoloader --no-scripts \
     && composer clear-cache \
     && rm -rf /root/.composer/cache
