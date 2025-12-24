@@ -50,8 +50,9 @@ COPY . /var/www/html/
 
 # Install composer dependencies (during build, not runtime)
 RUN composer config -g repo.packagist composer https://packagist.phpindonesia.id \
-    && composer config -g process-timeout 10000 \
-    && composer install --no-interaction --prefer-dist --no-dev --optimize-autoloader --no-scripts \
+    && composer config -g process-timeout 1800 \ 
+    && composer config -g github-protocols https \ 
+    && composer install --no-interaction --prefer-source --no-dev --optimize-autoloader --no-scripts \
     && composer clear-cache \
     && rm -rf /root/.composer/cache
 
